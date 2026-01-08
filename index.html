@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Platform</title>
+
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;background:#000;color:#ddd;font-family:Segoe UI,Arial}
+body{overflow-y:auto}
+
+/* LAYOUT */
+.wrapper{
+  min-height:220vh;
+  display:flex;flex-direction:column;align-items:center;
+  gap:26px;padding:36px 20px 160px
+}
+
+/* WARNING */
+.warning{
+  background:#222;padding:22px 48px;border-radius:28px;
+  font-size:22px;box-shadow:0 0 30px rgba(255,255,255,.15);
+  animation:float 4s ease-in-out infinite
+}
+@keyframes float{50%{transform:translateY(-6px)}}
+
+/* EYE */
+.eye-wrap{width:420px;height:240px;filter:drop-shadow(0 0 14px #fff)}
+svg{width:100%;height:100%}
+.eye-outline,.ring,.pupil,.retina,.scan{fill:none;stroke:#fff}
+.eye-outline{stroke-width:2}
+.ring{stroke-width:1.2;stroke-dasharray:6 8}
+.retina{stroke-width:.8;opacity:.55}
+.pupil{stroke-width:3}
+.scan{stroke-width:1;opacity:.35}
+.scanline{animation:scan 3.5s linear infinite}
+@keyframes scan{from{transform:translateY(-60px)}to{transform:translateY(260px)}}
+
+/* TEXT */
+.risk{max-width:640px;text-align:center;color:#888;font-size:16px}
+
+/* PREMIUM */
+.premium-wrap{display:flex;flex-direction:column;align-items:center;gap:10px}
+.crown{width:80px;height:40px;filter:drop-shadow(0 0 12px #ffb700)}
+.crown path{fill:none;stroke:#ffb700;stroke-width:3}
+.premium{
+  padding:16px 64px;border-radius:26px;
+  background:linear-gradient(120deg,#ffd500,#ff8400);
+  color:#222;font-weight:700;font-size:20px;
+  box-shadow:0 0 40px #ffb700;cursor:pointer
+}
+
+/* KEYS */
+.keybar{display:flex;gap:14px;align-items:center;color:#bbb}
+.badge{background:#111;border-radius:999px;padding:10px 18px}
+
+/* SEARCH */
+.search{display:flex;width:480px;max-width:95vw}
+.search input{
+  flex:1;padding:18px 22px;border:none;
+  border-radius:30px 0 0 30px;background:#1b1b1b;
+  color:#fff;outline:none
+}
+.search button{
+  padding:18px 26px;border:none;
+  border-radius:0 30px 30px 0;
+  background:#fff;font-weight:700;cursor:pointer
+}
+
+/* RESULT */
+.result{
+  width:520px;max-width:95vw;background:#111;
+  border-radius:20px;padding:20px;
+  box-shadow:0 0 22px rgba(255,255,255,.12);
+  display:none;color:#ccc
+}
+.result b{color:#fff}
+
+/* TOOLS */
+.tools{
+  margin-top:100px;width:95%;max-width:1300px;
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:18px
+}
+.tool{
+  background:#111;border-radius:18px;padding:18px;
+  box-shadow:0 0 20px rgba(255,255,255,.08)
+}
+.tool h4{margin:0 0 6px;color:#fff}
+.tool p{margin:0;font-size:13px;color:#888}
+
+/* LINUX */
+.linux-section{margin-top:100px;width:95%;max-width:1200px}
+.linux-title{color:#fff;font-size:22px;margin-bottom:14px}
+.terminal{
+  background:#0b0b0b;border-radius:16px;padding:18px;margin-bottom:18px;
+  box-shadow:0 0 25px rgba(255,255,255,.08);
+  font-family:"Courier New",monospace;color:#e6e6e6;font-size:14px
+}
+.prompt{color:#8cff8c}.cmd{color:#fff}.comment{color:#777}
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+
+  <div class="warning">Bu Platform Siber Suçları kapsar</div>
+
+  <div class="eye-wrap">
+    <svg viewBox="0 0 420 240" id="eyeSvg">
+      <path class="eye-outline" d="M20 120 Q210 240 400 120 Q210 0 20 120 Z"/>
+      <circle class="ring" cx="210" cy="120" r="70"/>
+      <circle class="ring" cx="210" cy="120" r="52"/>
+      <circle class="ring" cx="210" cy="120" r="34"/>
+      <g id="retina">
+        <line class="retina" x1="210" y1="86" x2="210" y2="154"/>
+        <line class="retina" x1="176" y1="120" x2="244" y2="120"/>
+        <line class="retina" x1="185" y1="95" x2="235" y2="145"/>
+        <line class="retina" x1="235" y1="95" x2="185" y2="145"/>
+      </g>
+      <circle class="pupil" cx="210" cy="120" r="22"/>
+      <g class="scanline"><line class="scan" x1="80" y1="0" x2="340" y2="0"/></g>
+    </svg>
+  </div>
+
+  <div class="risk">
+    Bu sistemlerin oluşturabileceği riskler; özgürlük kısıtlaması,
+    para cezaları ve hapis yaptırımlarını içerebilir.
+  </div>
+
+  <div class="keybar">
+    <div class="badge">Kalan Hak: <b id="keys">0</b></div>
+    <div>(1 sorgu = 1 hak)</div>
+  </div>
+
+  <div class="premium-wrap">
+    <svg class="crown" viewBox="0 0 100 50">
+      <path d="M10 40 L25 15 L50 35 L75 15 L90 40 Z"/>
+      <path d="M10 40 H90"/>
+    </svg>
+    <div class="premium" id="premiumBtn">Premium</div>
+  </div>
+
+  <div class="search">
+    <input id="q" placeholder="IP / Discord / Domain">
+    <button onclick="check()">Gönder</button>
+  </div>
+
+  <div class="result" id="result"></div>
+
+  <!-- ALT TARAF / TOOLS -->
+  <div class="tools" id="tools"></div>
+
+  <!-- ALT TARAF / LINUX -->
+  <div class="linux-section">
+    <div class="linux-title">Linux • Network & System Tools</div>
+
+    <div class="terminal">
+      <div class="prompt">root@kali:~# <span class="cmd">nmap -sV 192.168.1.1</span></div>
+      <div class="comment"># Servis ve versiyon taraması</div><br>
+      PORT  STATE SERVICE VERSION<br>
+      22/tcp open ssh OpenSSH 8.2<br>
+      80/tcp open http Apache 2.4.41
+    </div>
+
+    <div class="terminal">
+      <div class="prompt">root@kali:~# <span class="cmd">whois example.com</span></div><br>
+      Registrar: EXAMPLE REGISTRAR INC.<br>
+      Country: TR<br>
+      Status: ACTIVE
+    </div>
+
+    <div class="terminal">
+      <div class="prompt">root@kali:~# <span class="cmd">netstat -tulnp</span></div><br>
+      tcp 0 0 0.0.0.0:22 LISTEN sshd<br>
+      tcp 0 0 0.0.0.0:80 LISTEN apache2
+    </div>
+
+    <div class="terminal">
+      <div class="prompt">root@kali:~# <span class="cmd">uname -a</span></div><br>
+      Linux kali 6.5.0-amd64 #1 SMP
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* EYE FOLLOW */
+const svg=document.getElementById("eyeSvg");
+const pupil=svg.querySelector(".pupil");
+const rings=svg.querySelectorAll(".ring");
+const retina=svg.querySelector("#retina");
+const cx=210, cy=120, max=18;
+let tx=0,ty=0,cxCur=0,cyCur=0;
+window.addEventListener("mousemove",e=>{
+  const r=svg.getBoundingClientRect();
+  const dx=e.clientX-(r.left+cx), dy=e.clientY-(r.top+cy);
+  const d=Math.min(max,Math.hypot(dx,dy)/14);
+  const a=Math.atan2(dy,dx);
+  tx=Math.cos(a)*d; ty=Math.sin(a)*d;
+});
+(function anim(){
+  cxCur+=(tx-cxCur)*.18; cyCur+=(ty-cyCur)*.18;
+  pupil.setAttribute("cx",cx+cxCur);
+  pupil.setAttribute("cy",cy+cyCur);
+  retina.setAttribute("transform",`translate(${cxCur*.6},${cyCur*.6})`);
+  rings.forEach((r,i)=>r.setAttribute("transform",`translate(${cxCur*(.2+i*.1)},${cyCur*(.2+i*.1)})`));
+  requestAnimationFrame(anim);
+})();
+
+/* KEYS */
+const INF="∞";
+function getKeys(){return localStorage.getItem("keys") ?? "0"}
+function setKeys(v){localStorage.setItem("keys",v);document.getElementById("keys").textContent=v}
+setKeys(getKeys());
+
+/* FAKE DATA */
+function rand(a){return a[Math.floor(Math.random()*a.length)]}
+function check(){
+  let k=getKeys();
+  if(k!==INF && +k<=0){alert("Hak yok.");return}
+  if(k!==INF) setKeys(String(+k-1));
+
+  const v=document.getElementById("q").value.trim();
+  let out="";
+  if(/^\d{1,3}(\.\d{1,3}){3}$/.test(v)){
+    out=`<b>IP Analizi</b><br>Ülke: ${rand(["TR","DE","NL","US"])}<br>ISP: ${rand(["TurkNet","Vodafone","TTNET"])}<br>Risk Skoru: ${Math.floor(Math.random()*40)+30}%`;
+  }else if(/.+#\d{4}$/.test(v)){
+    out=`<b>Discord Profili</b><br>Durum: ${rand(["Aktif","Pasif"])}<br>Hesap Yaşı: ${Math.floor(Math.random()*5)+1} yıl`;
+  }else if(/^[a-z0-9.-]+\.[a-z]{2,}$/i.test(v)){
+    out=`<b>Domain Kaydı</b><br>Registrar: ${rand(["NameCheap","GoDaddy","IHS"])}<br>Ülke: ${rand(["TR","US","DE"])}<br>Durum: Active`;
+  }else out="Tanımsız veri formatı";
+
+  const r=document.getElementById("result");
+  r.innerHTML=out;r.style.display="block";
+}
+
+/* TOOLS LOAD */
+const toolData=[
+ ["ShadowRecon","Automated surface discovery framework"],
+ ["GhostTrace","Digital footprint analyzer"],
+ ["PacketLens","Traffic visualization suite"],
+ ["DarkScan","Service enumeration tool"],
+ ["KernelWatch","System behavior monitor"],
+ ["SignalMapper","Infrastructure mapping utility"]
+];
+const t=document.getElementById("tools");
+toolData.forEach(d=>{
+  t.innerHTML+=`<div class="tool"><h4>${d[0]}</h4><p>${d[1]}</p></div>`;
+});
+</script>
+</body>
+</html>
